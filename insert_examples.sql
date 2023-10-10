@@ -32,7 +32,6 @@ VALUES
     ('Science Center'),
     ('Library');
 
--- Update this INSERT statement to include new columns
 INSERT INTO room (room_name, building_id, has_projector, has_computers, is_accessible)
 VALUES
     ('Room 101', 1, true, true, true),
