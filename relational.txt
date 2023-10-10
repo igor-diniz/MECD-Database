@@ -1,0 +1,16 @@
+﻿Student(student_id, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN])
+
+Course(course_id, course_name [NN][UK])
+
+ExamType(exam_type_id, exam_name [NN][UK])
+
+Building(building_id, building_name [NN][UK])
+
+Room(room_id, room_name [NN][UK], #building_id -> Building [NN])
+
+ExamEvent(exam_event_id, date [NN], #exam_type_id -> ExamType [NN], 
+	   #course_id -> Course [NN], #room_id -> Room [NN])
+
+Enrollment(#student_id -> Student, #course_id -> Course)
+
+Assessment(#student_id -> Student, #exam_event_id -> ExamEvent, gpa [NN])
