@@ -31,6 +31,9 @@ with open('grades.csv', 'r') as csv_file:
         exam_name = row['exam_name']
         building_name = row['building_name']
         room_name = row['room_name']
+        has_projector = row['has_projector'] == 't'
+        has_computers = row['has_computers'] == 't'
+        is_accessible = row['is_accessible'] == 't'
 
         # Insert data into the tables
         cursor.execute("""
@@ -94,11 +97,11 @@ with open('grades.csv', 'r') as csv_file:
             building_id = cursor.fetchone()[0]
 
         cursor.execute("""
-            INSERT INTO room (room_name, building_id)
-            VALUES (%s, %s)
+            INSERT INTO room (room_name, building_id, has_projector, has_computers, is_accessible)
+            VALUES (%s, %s, %s, %s, %s)
             ON CONFLICT (room_name) DO NOTHING
             RETURNING room_id;
-        """, (room_name, building_id))
+        """, (room_name, building_id, has_projector, has_computers, is_accessible))
 
         room_id = cursor.fetchone()
         if room_id is not None:
