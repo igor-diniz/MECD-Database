@@ -25,7 +25,7 @@
 [Click here](grades.sql) to check out the creation script for the database tables over the **grades** schema.
 
 ## Tables insertion examples without Python automation
-[Click here](insertion_examples.sql) to have some examples to populate grades' tables via SQL script.
+[Click here](insert_examples.sql) to have some examples to populate grades' tables via SQL script.
 
 
 
