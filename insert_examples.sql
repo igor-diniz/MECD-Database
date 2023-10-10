@@ -8,7 +8,6 @@ VALUES
     ('Sarah', 'Brown', 'sarah.brown@example.com', '1997-04-30'),
     ('Michael', 'Davis', 'michael.davis@example.com', '1993-09-05');
 
-
 INSERT INTO course (course_name)
 VALUES
     ('Mathematics'),
@@ -16,7 +15,6 @@ VALUES
     ('Computer Science'),
     ('Biology'),
     ('Chemistry');
-
 
 INSERT INTO exam_type (exam_name)
 VALUES
@@ -26,7 +24,6 @@ VALUES
     ('Quiz 2'),
     ('Project Presentation');
 
-
 INSERT INTO building (building_name)
 VALUES
     ('Building A'),
@@ -35,15 +32,13 @@ VALUES
     ('Science Center'),
     ('Library');
 
-
-INSERT INTO room (room_name, building_id)
+INSERT INTO room (room_name, building_id, has_projector, has_computers, is_accessible)
 VALUES
-    ('Room 101', 1),
-    ('Room 201', 1),
-    ('Room 102', 2),
-    ('Room 301', 3),
-    ('Lab 1', 4);
-
+    ('Room 101', 1, true, true, true),
+    ('Room 201', 1, true, true, true),
+    ('Room 102', 2, true, false, true),
+    ('Room 301', 3, false, false, true),
+    ('Lab 1', 4, true, true, true);
 
 INSERT INTO exam_event (date, exam_type_id, course_id, room_id)
 VALUES
@@ -53,7 +48,6 @@ VALUES
     ('2023-12-10', 1, 4, 4),
     ('2023-10-20', 2, 5, 5);
 
-
 INSERT INTO enrollment (student_id, course_id)
 VALUES
     (1, 1),
@@ -61,7 +55,6 @@ VALUES
     (3, 1),
     (4, 3),
     (5, 2);
-
 
 INSERT INTO assessment (student_id, exam_event_id, gpa)
 VALUES
