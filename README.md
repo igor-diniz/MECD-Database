@@ -1,6 +1,6 @@
 # MECD Database Project
 
-## UML designed for the grades CSV
+## UML designed For the grades CSV
 <img src="uml.png" with="600px" height="470px">
 
 ## Relational Model from UML
@@ -21,8 +21,11 @@
 
 8. Assessment (<u>**#student_id -> Student**</u>, <u>**#exam_event_id -> ExamEvent**</u>, gpa [NN])
 
-## Tables Creation Script
+## Tables creation script
 [Click here](grades.sql) to check out the creation script for the database tables over the **grades** schema.
+
+## Tables insertion examples without Python automation
+[Click here](insertion_examples.sql) to have some examples to populate grades' tables via SQL script.
 
 
 
