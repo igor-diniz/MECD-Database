@@ -1,8 +1,6 @@
-# Importe os módulos necessários
 import psycopg2
 from datetime import datetime
 
-# Parâmetros de conexão com o banco de dados
 db_params = {
     'host': 'dbm.fe.up.pt',
     'port': '5433',
@@ -11,7 +9,6 @@ db_params = {
     'password': 'fced_ingrid_diniz'
 }
 
-# Função para conectar ao banco de dados
 def connect_to_database():
     try:
         conn = psycopg2.connect(**db_params)
@@ -23,8 +20,6 @@ def connect_to_database():
         print(f"Erro ao conectar ao banco de dados: {e}")
         return None
 
-
-# Função para criar o menu
 def menu():
     print("Menu:")
     print("[1] Search Student")
@@ -106,7 +101,6 @@ def search_student(cursor):
     print("[0] Back")
 
 
-
 def search_course(cursor):
     print("---")
     course_name = input("What course do you want to search: ")
@@ -172,6 +166,7 @@ def search_course(cursor):
 
     print("[0] Back")
 
+
 def search_room(cursor):
     print("---")
     room_name = input("What room do you want to search: ")
@@ -224,6 +219,7 @@ def search_room(cursor):
 
     print("[0] Back")
 
+
 def search_assessment(cursor):
     print("---")
     assessment_id = input("What assessment do you want to search (ID): ")
@@ -253,7 +249,7 @@ def search_assessment(cursor):
             print(f"Course Name: {course_name}")
             print(f"Date: {date}")
         elif choice == '2':
-            # Adicione a lógica para obter informações sobre a sala
+            # Terminar 
             pass
         elif choice == '3':
             cursor.execute("""
@@ -272,7 +268,6 @@ def search_assessment(cursor):
     print("[0] Back")
 
 
-# Função para executar a opção escolhida
 def execute_option(choice, cursor):
     if choice == '1':
         search_student(cursor)
