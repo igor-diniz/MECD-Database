@@ -45,6 +45,7 @@ CREATE TABLE room (
     room_id SERIAL PRIMARY KEY,
     room_name TEXT NOT NULL UNIQUE,
     building_id INTEGER NOT NULL,
+    capacity INTEGER NOT NULL,
     has_projector BOOLEAN NOT NULL,
     has_computers BOOLEAN NOT NULL,
     is_accessible BOOLEAN NOT NULL,

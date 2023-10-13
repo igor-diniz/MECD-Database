@@ -4,11 +4,11 @@ from datetime import datetime
 
 # Database connection parameters
 db_params = {
-    'host': '',
-    'port': '',
-    'database': '',
-    'user': '',
-    'password': ''
+    'host': 'dbm.fe.up.pt',
+    'port': '5433',
+    'database': 'fced_ingrid_diniz',
+    'user': 'fced_ingrid_diniz',
+    'password': 'fced_ingrid_diniz'
 }
 
 
@@ -86,7 +86,7 @@ def insert_building(cursor, building_name):
 
     return cursor.fetchone()[0]
 
-def insert_room(cursor, room_name, building_id, has_projector, has_computers, is_accessible):
+def insert_room(cursor, room_name, building_id, capacity, has_projector, has_computers, is_accessible):
     """Insert or retrieve a room record."""
     cursor.execute("SELECT room_id FROM room WHERE room_name = %s;", (room_name,))
     room_id = cursor.fetchone()
@@ -95,10 +95,10 @@ def insert_room(cursor, room_name, building_id, has_projector, has_computers, is
         return room_id[0]
 
     cursor.execute("""
-        INSERT INTO room (room_name, building_id, has_projector, has_computers, is_accessible)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO room (room_name, building_id, capacity, has_projector, has_computers, is_accessible)
+        VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING room_id;
-    """, (room_name, building_id, has_projector, has_computers, is_accessible))
+    """, (room_name, building_id, capacity, has_projector, has_computers, is_accessible))
 
     return cursor.fetchone()[0]
 
@@ -164,6 +164,7 @@ def main():
                 exam_name = row['exam_name']
                 building_name = row['building_name']
                 room_name = row['room_name']
+                capacity = row["capacity"]
                 has_projector = row['has_projector'] == 't'
                 has_computers = row['has_computers'] == 't'
                 is_accessible = row['is_accessible'] == 't'
@@ -173,7 +174,7 @@ def main():
                 course_id = insert_course(cursor, course_name)
                 exam_type_id = insert_exam_type(cursor, exam_name)
                 building_id = insert_building(cursor, building_name)
-                room_id = insert_room(cursor, room_name, building_id, has_projector, has_computers, is_accessible)
+                room_id = insert_room(cursor, room_name, building_id, capacity, has_projector, has_computers, is_accessible)
 
                 # Insert data into the database
                 insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, gpa)
