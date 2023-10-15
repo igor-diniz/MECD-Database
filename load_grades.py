@@ -4,11 +4,11 @@ from datetime import datetime
 
 # Database connection parameters
 db_params = {
-    'host': 'dbm.fe.up.pt',
-    'port': '5433',
-    'database': 'fced_ingrid_diniz',
-    'user': 'fced_ingrid_diniz',
-    'password': 'fced_ingrid_diniz'
+    'host': '',
+    'port': '',
+    'database': '',
+    'user': '',
+    'password': ''
 }
 
 
@@ -22,7 +22,7 @@ def connect_to_database():
         print(f"Error connecting to the database: {e}")
         return None
 
-def insert_student(cursor, first_name, last_name, email, date_of_birth):
+def insert_student(cursor, first_name, last_name, email, date_of_birth, gpa, state_id):
     """Insert or retrieve a student record."""
     cursor.execute("SELECT student_id FROM student WHERE email = %s;", (email,))
     student_id = cursor.fetchone()
@@ -31,10 +31,26 @@ def insert_student(cursor, first_name, last_name, email, date_of_birth):
         return student_id[0]
 
     cursor.execute("""
-        INSERT INTO student (first_name, last_name, email, date_of_birth)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO student (first_name, last_name, email, date_of_birth, gpa, state_id)
+        VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING student_id;
-    """, (first_name, last_name, email, date_of_birth))
+    """, (first_name, last_name, email, date_of_birth, gpa, state_id))
+
+    return cursor.fetchone()[0]
+
+def insert_state(cursor, state):
+    """Insert or retrieve a state record."""
+    cursor.execute("SELECT state_id FROM state WHERE state_name = %s;", (state,))
+    state_id = cursor.fetchone()
+
+    if state_id is not None:
+        return state_id[0]
+
+    cursor.execute("""
+        INSERT INTO state (state_name)
+        VALUES (%s)
+        RETURNING state_id;
+    """, (state,))
 
     return cursor.fetchone()[0]
 
@@ -103,7 +119,7 @@ def insert_room(cursor, room_name, building_id, capacity, has_projector, has_com
     return cursor.fetchone()[0]
 
 
-def insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, gpa):
+def insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, grade):
     """Insert data into assessment, exam_event, and enrollment tables."""
     cursor.execute("""
         INSERT INTO exam_event (date, exam_type_id, course_id, room_id)
@@ -130,9 +146,9 @@ def insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id,
         """, (student_id, course_id))
 
     cursor.execute("""
-        INSERT INTO assessment (student_id, exam_event_id, gpa)
+        INSERT INTO assessment (student_id, exam_event_id, grade)
         VALUES (%s, %s, %s);
-    """, (student_id, exam_event_id, gpa))
+    """, (student_id, exam_event_id, grade))
 
 
 def main():
@@ -153,6 +169,9 @@ def main():
 
         try:
             for row in csv_reader:
+                # Just to act as a log during inserting
+                print(f"Inserting row:\n{row}", end="\n\n")
+
                 # Extract data from the CSV row
                 exam_date = datetime.strptime(row['exam_date'], '%Y-%m-%d')
                 first_name = row['first_name']
@@ -168,16 +187,19 @@ def main():
                 has_projector = row['has_projector'] == 't'
                 has_computers = row['has_computers'] == 't'
                 is_accessible = row['is_accessible'] == 't'
+                state_name = row["state"]
+                grade = row["grade"]
 
                 # Insert or retrieve IDs for student, course, exam type, building, and room
-                student_id = insert_student(cursor, first_name, last_name, email, date_of_birth)
+                state_id = insert_state(cursor, state_name)
+                student_id = insert_student(cursor, first_name, last_name, email, date_of_birth, gpa, state_id)
                 course_id = insert_course(cursor, course_name)
                 exam_type_id = insert_exam_type(cursor, exam_name)
                 building_id = insert_building(cursor, building_name)
                 room_id = insert_room(cursor, room_name, building_id, capacity, has_projector, has_computers, is_accessible)
 
                 # Insert data into the database
-                insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, gpa)
+                insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, grade)
 
             # Commit the changes and close the connection
             conn.commit()
