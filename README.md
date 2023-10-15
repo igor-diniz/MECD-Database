@@ -26,8 +26,8 @@
 ## Tables creation script
 [Click here](grades.sql) to check out the creation script for the database tables over the **grades** schema.
 
-## Tables insertion examples without Python automation
-[Click here](insert_examples.sql) to have some examples to populate grades' tables via SQL script.
+## Tables insertion script
+[Click here](load_grades.py) access the insertion script automated using psycopg2.
 
 
 
