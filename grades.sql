@@ -15,6 +15,12 @@ DROP TABLE IF EXISTS state;
 
 -- Create scripts
 
+CREATE TABLE state (
+    state_id SERIAL PRIMARY KEY,
+    state_name TEXT NOT NULL
+);
+
+
 CREATE TABLE student (
     student_id SERIAL PRIMARY KEY,
     first_name TEXT NOT NULL,
@@ -24,11 +30,6 @@ CREATE TABLE student (
     gpa NUMERIC(3,2) NOT NULL CHECK (gpa >= 0 AND gpa <= 4),
     state_id INTEGER NOT NULL,
     FOREIGN KEY (state_id) REFERENCES State
-);
-
-CREATE TABLE state (
-    state_id SERIAL PRIMARY KEY,
-    state_name TEXT NOT NULL
 );
 
 
