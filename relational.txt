@@ -1,4 +1,6 @@
-Student(student_id, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN])
+Student(student_id, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN], gpa [NN])
+
+State(state_id, state_name [NN])
 
 Course(course_id, course_name [NN][UK])
 
@@ -13,4 +15,4 @@ ExamEvent(exam_event_id, date [NN], #exam_type_id -> ExamType [NN],
 
 Enrollment(#student_id -> Student, #course_id -> Course)
 
-Assessment(#student_id -> Student, #exam_event_id -> ExamEvent, gpa [NN])
+Assessment(#student_id -> Student, #exam_event_id -> ExamEvent, grade [NN])
