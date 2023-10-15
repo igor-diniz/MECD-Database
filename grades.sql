@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS building;
 DROP TABLE IF EXISTS exam_type;
 DROP TABLE IF EXISTS course;
 DROP TABLE IF EXISTS student;
+DROP TABLE IF EXISTS state;
 
 
 -- Create scripts
@@ -19,7 +20,13 @@ CREATE TABLE student (
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    date_of_birth DATE NOT NULL
+    date_of_birth DATE NOT NULL,
+    gpa NUMERIC(3,2) NOT NULL CHECK (gpa >= 0 AND gpa <= 4)
+);
+
+CREATE TABLE state (
+    state_id SERIAL PRIMARY KEY,
+    state_name TEXT NOT NULL
 );
 
 
@@ -77,7 +84,7 @@ CREATE TABLE enrollment (
 CREATE TABLE assessment (
     student_id INTEGER,
     exam_event_id INTEGER,
-    gpa NUMERIC(3, 2) NOT NULL,
+    grade NUMERIC(5, 2) NOT NULL CHECK (grade >= 0 AND grade <= 100),
     PRIMARY KEY (student_id, exam_event_id),
     FOREIGN KEY (student_id) REFERENCES student (student_id),
     FOREIGN KEY (exam_event_id) REFERENCES exam_event (exam_event_id)
