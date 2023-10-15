@@ -1,4 +1,4 @@
-Student(student_id, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN], gpa [NN])
+Student(student_id, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN], gpa [NN], #state_id -> State)
 
 State(state_id, state_name [NN])
 

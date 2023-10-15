@@ -21,7 +21,9 @@ CREATE TABLE student (
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
     date_of_birth DATE NOT NULL,
-    gpa NUMERIC(3,2) NOT NULL CHECK (gpa >= 0 AND gpa <= 4)
+    gpa NUMERIC(3,2) NOT NULL CHECK (gpa >= 0 AND gpa <= 4),
+    state_id INTEGER NOT NULL,
+    FOREIGN KEY (state_id) REFERENCES State
 );
 
 CREATE TABLE state (

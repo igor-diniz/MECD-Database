@@ -4,7 +4,7 @@
 <img src="uml.png" with="600px" height="470px">
 
 ## Relational Model from UML
-1. Student (<u>**student_id**</u>, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN], gpa [NN])
+1. Student (<u>**student_id**</u>, first_name [NN], last_name [NN], email [NN][UK], date_of_birth, [NN], gpa [NN], #state_id -> State)
 
 2. State (<u>**state_id**</u>, state_name [NN])
 
