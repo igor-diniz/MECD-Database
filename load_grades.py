@@ -1,14 +1,18 @@
+import os
 import csv
 import psycopg2
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Database connection parameters
 db_params = {
-    'host': '',
-    'port': '',
-    'database': '',
-    'user': '',
-    'password': ''
+    'host': os.getenv("HOST"),
+    'port': os.getenv("PORT"),
+    'database': os.getenv("DATABASE"),
+    'user': os.getenv("DB_USER"),
+    'password':os.getenv("DB_PASS")
 }
 
 
@@ -119,18 +123,31 @@ def insert_room(cursor, room_name, building_id, capacity, has_projector, has_com
     return cursor.fetchone()[0]
 
 
-def insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, grade):
+def insert_data(conn, exam_date, student_id, course_id, exam_type_id, room_id, grade):
     """Insert data into assessment, exam_event, and enrollment tables."""
-    cursor.execute("""
-        INSERT INTO exam_event (date, exam_type_id, course_id, room_id)
-        VALUES (%s, %s, %s, %s)
-        RETURNING exam_event_id;
-    """, (exam_date, exam_type_id, course_id, room_id))
+    conn.commit()
+    cursor = conn.cursor()
+    try:
+        
+        cursor.execute("""
+            INSERT INTO exam_event (date, exam_type_id, course_id, room_id)
+            VALUES (%s, %s, %s, %s)
+            RETURNING exam_event_id;
+        """, (exam_date, exam_type_id, course_id, room_id))
 
-    exam_event_id = cursor.fetchone()
+        exam_event_id = cursor.fetchone()[0]
+    except Exception as e:
+        conn.rollback()
+        cursor = conn.cursor()
+        # Handle the case where a unique constraint violation occurred
+        cursor.execute("""
+            SELECT exam_event_id
+            FROM exam_event
+            WHERE date = %s AND exam_type_id = %s AND course_id = %s AND room_id = %s;
+        """, (exam_date, exam_type_id, course_id, room_id))
 
-    if exam_event_id is not None:
-        exam_event_id = exam_event_id[0]
+        exam_event_id = cursor.fetchone()[0]
+
 
     cursor.execute("""
         SELECT student_id, course_id FROM enrollment
@@ -199,7 +216,7 @@ def main():
                 room_id = insert_room(cursor, room_name, building_id, capacity, has_projector, has_computers, is_accessible)
 
                 # Insert data into the database
-                insert_data(cursor, exam_date, student_id, course_id, exam_type_id, room_id, grade)
+                insert_data(conn, exam_date, student_id, course_id, exam_type_id, room_id, grade)
 
             # Commit the changes and close the connection
             conn.commit()
