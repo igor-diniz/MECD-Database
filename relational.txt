@@ -8,7 +8,7 @@ ExamType(exam_type_id, exam_name [NN][UK])
 
 Building(building_id, building_name [NN][UK])
 
-Room(room_id, room_name [NN][UK], #building_id -> Building [NN], has_projector [NN], has_computers [NN], is_accessible [NN])
+Room(room_id, room_name [NN][UK], #building_id -> Building [NN], has_projector [NN], capacity [NN], has_computers [NN], is_accessible [NN])
 
 ExamEvent(exam_event_id, date [NN], #exam_type_id -> ExamType [NN], 
 	   #course_id -> Course [NN], #room_id -> Room [NN])
