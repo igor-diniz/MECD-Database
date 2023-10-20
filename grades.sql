@@ -72,7 +72,7 @@ CREATE TABLE exam_event (
     FOREIGN KEY (exam_type_id) REFERENCES exam_type,
     FOREIGN KEY (course_id) REFERENCES course,
     FOREIGN KEY (room_id) REFERENCES room,
-    UNIQUE (date, room_id, exam_type_id)
+    UNIQUE (date, room_id, exam_type_id, course_id)
 );
 
 
