@@ -17,7 +17,7 @@
 6. Room (<u>**room_id**</u>, room_name [NN][UK], #building_id -> Building [NN], has_projector [NN], has_computers [NN], is_accessible [NN])
 
 7. ExamEvent (<u>**exam_event_id**</u>, date [NN], #exam_type_id -> ExamType [NN], 
-	   #course_id -> Course [NN], #room_id -> Room [NN])
+	   #course_id -> Course [NN], #room_id -> Room [NN]) UK:{exam_type_id, room_id, date, course_id}
 
 8. Enrollment (<u>**#student_id -> Student**</u>, <u>**#course_id -> Course**</u>)
 
