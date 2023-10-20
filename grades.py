@@ -550,7 +550,6 @@ class Course(Menu):
         self.print(f"The course '{self.course.course_name}' is taught in the building '{response}'.")
         return self.menu
 
-    @enter_to_continue
     def search_course(self):
         """Search for a course by name."""
         course_name = input("What course do you want to search: ")
@@ -659,7 +658,32 @@ class Building(Menu):
             self.print(f"No building found with the name {building_name}.", bcolors.FAIL)
 
         return None
+    
+    @enter_to_continue
+    def show_rooms_from_building(self):
+        """Show rooms from building."""
 
+        building_id = self.building.building_id
+        self.cursor.execute("""
+            SELECT room_id, room_name, building.building_id, capacity, has_projector, has_computers, is_accessible
+            FROM room
+            JOIN building ON room.building_id = building.building_id
+            WHERE building.building_id = %s;
+        """, (building_id,))
+        rooms = self.cursor.fetchall()
+        self.print(f"Rooms in the building '{building_id}':")
+        for room in rooms:
+            RoomModel(
+                room_id=room[0],
+                room_name=room[1],
+                building_id=room[2],
+                capacity=room[3],
+                has_projector=room[4],
+                has_computers=room[5],
+                is_accessible=room[6]
+            ).print_details()
+        return self.menu
+    
     @enter_to_continue
     def show_all_buildings(self):
         """Show all buildings."""
@@ -685,7 +709,7 @@ class Building(Menu):
         if self.building:
             self.print(f"What do you want to know about the building '{self.building.building_name}'?", bcolors.HEADER)
             options = {
-                '1': Room().show_rooms_from_building,
+                '1': self.show_rooms_from_building,
             }
         else:
             self.print("What do you want to do?", bcolors.HEADER)
@@ -729,30 +753,6 @@ class Room(Menu):
             self.print(f"No room found with the name {room_name}.", bcolors.FAIL)
 
         return None
-
-    @enter_to_continue
-    def show_rooms_from_building(self, building_id):
-        """Show rooms from building."""
-
-        self.cursor.execute("""
-            SELECT room_id, room_name, building_id, capacity, has_projector, has_computers, is_accessible
-            FROM room
-            JOIN building ON room.building_id = building.building_id
-            WHERE building_id = %s;
-        """, (building_id,))
-        rooms = self.cursor.fetchall()
-        self.print(f"Rooms in the building '{building_id}':")
-        for room in rooms:
-            RoomModel(
-                room_id=room[0],
-                room_name=room[1],
-                building_id=room[2],
-                capacity=room[3],
-                has_projector=room[4],
-                has_computers=room[5],
-                is_accessible=room[6]
-            ).print_details()
-        return self.menu
 
     @enter_to_continue
     def show_all_rooms(self):
@@ -818,13 +818,13 @@ class Room(Menu):
             self.print(f"What do you want to know about the room '{self.room.room_name}'?", bcolors.HEADER)
             options = {
                 '1': self.show_details,
-                '2': self.plot_room_utilization,
             }
         else:
             self.print("What do you want to do?", bcolors.HEADER)
             options = {
                 '1': self.search_room,
                 '2': self.show_all_rooms,
+                '3': self.plot_room_utilization,
             }
 
         options['9'] = self.initial_menu
